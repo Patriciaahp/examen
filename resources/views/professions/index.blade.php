@@ -31,6 +31,11 @@
                             <button type="submit" class="btn btn-link">
                                 <span class="oi oi-trash"></span>
                             </button>
+
+                            @else
+                                <a href="{{ route('professions.create') }}" class="btn
+                                btn-outline-secondary btn-sm"><span
+                                            class="oi oi-pencil"></span></a>
                         </form>
                     @endif
                 </td>

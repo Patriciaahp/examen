@@ -34,8 +34,11 @@
                     {{ old('profession_id', $user->profile->profession_id) == $profession->id ? 'selected' : '' }}
             >{{ $profession->title }}</option>
         @endforeach
+
     </select>
 </div>
+
+
 
 <h5>Habilidades</h5>
 

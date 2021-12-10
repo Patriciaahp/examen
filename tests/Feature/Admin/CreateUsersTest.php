@@ -224,7 +224,7 @@ public function the_twitter_must_be_an_url()
     }
 
     /** @test */
-    public function the_profession_id_field_is_optional()
+   /** public function the_profession_id_field_is_optional()
     {
         $this->post('usuarios', $this->withData([
             'profession_id' => null
@@ -243,7 +243,18 @@ public function the_twitter_must_be_an_url()
             'profession_id' => null
         ]);
     }
+**/
 
+    /** @test */
+    public function the_profession_id_field_is_required()
+    {
+    $this->post('usuarios', $this->withData([
+    'profession_id' => null
+    ]))-> assertSessionHasErrors(['profession']);
+
+        $this->assertDatabaseEmpty('users');
+
+    }
     /** @test */
     public function the_profession_must_be_valid()
     {

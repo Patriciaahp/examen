@@ -22,4 +22,9 @@ class ProfessionController extends Controller
 
         return redirect()->route('professions.index');
     }
+
+    public function create()
+    {
+        return $this->form('users.create', new Profession());
+    }
 }
