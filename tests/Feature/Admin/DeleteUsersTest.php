@@ -63,4 +63,20 @@ class DeleteUsersTest extends TestCase
             'deleted_at' => null,
         ]);
     }
+    /** @test  */
+public function it_restores_a_user()
+{
+    $this->withExceptionHandling();
+
+    $user = factory(User::class)->create([
+        'deleted_at' => now(),
+    ]);
+
+    $user->restore('usuarios/' . $user->id);
+    $this->assertDatabaseHas('users', [
+        'id' => $user->id,
+        'deleted_at' => null,
+
+    ]);
+}
 }

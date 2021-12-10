@@ -28,6 +28,13 @@ class UserFilter extends QueryFilter
                 ->orWhere('email', 'LIKE', "%{$search}%")
                 ->orWhereHas('team', function ($query) use ($search) {
                     $query->where('name', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('profile', function ($query) use ($search) {
+                    $query->where('profession_id', '=', 'profession_id')
+                        ->orWhereHas('profession', function ($query) use ($search){
+                            $query->where('title', 'LIKE', "%{$search}%");
+                        });
+
                 });
         });
 
@@ -72,6 +79,5 @@ class UserFilter extends QueryFilter
         } elseif ($team === 'without_team') {
             $query->doesntHave('team');
         }
-
     }
 }

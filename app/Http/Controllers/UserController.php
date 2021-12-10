@@ -41,7 +41,7 @@ class UserController extends Controller
 
     public function trashed()
     {
-        $users = User::onlyTrashed()->paginate();
+        $users = User::onlyTrashed()->with('skills', 'profile', 'team')->paginate();
 
         return view('users.index', [
             'users' => $users,
@@ -106,5 +106,15 @@ class UserController extends Controller
             'professions' => Profession::orderBy('title', 'ASC')->get(),
             'skills' => Skill::orderBy('name', 'ASC')->get(),
         ]);
+    }
+    public function restore($id)
+    {
+
+        $user = User::onlyTrashed()->where('id', $id)->firstOrFail();
+        $user->profile()->restore();
+        $user->restore();
+
+        return redirect()->route('users.trashed');
+
     }
 }
