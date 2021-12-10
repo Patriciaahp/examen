@@ -260,4 +260,57 @@ class UpdateUsersTest extends TestCase
 
         $this->assertDatabaseMissing('users', ['first_name' => 'Pepe']);
     }
+
+
+
+    /** @test */
+    public function the_twitter_field_is_optional()
+    {
+        $this->handleValidationExceptions();
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+        ->put('usuarios/' . $user->id, $this->withData([
+            'twitter' => '',
+        ]));
+        $this->assertDatabaseHas('user_profiles', [
+            'twitter' => null,
+        ]);
+    }
+
+    /** @test  */
+    public function the_twitter_must_be_an_url()
+    {
+        $this->handleValidationExceptions();
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, $this->withData([
+                'twitter' => 'pepeperez',
+            ]))->assertRedirect('usuarios/' . $user->id . '/editar')
+            ->assertSessionHasErrors(['twitter']);
+
+    }
+
+
+    /** @test */
+    public function the_bio_is_required_updating()
+    {
+        $this->handleValidationExceptions();
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, $this->withData([
+                'bio' => '',
+            ]))->assertRedirect('usuarios/' . $user->id . '/editar')
+            ->assertSessionHasErrors(['bio']);
+
+            $this->assertDatabaseMissing('users', ['first_name' => 'Pepe']);
+
+
+    }
+
+
 }

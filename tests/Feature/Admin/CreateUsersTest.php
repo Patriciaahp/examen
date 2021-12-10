@@ -114,13 +114,38 @@ class CreateUsersTest extends TestCase
             'email' => 'pepe@mail.es',
             'password' => '123456'
         ]);
-
         $this->assertDatabaseHas('user_profiles', [
             'bio' => 'Programador de Laravel y Vue.js',
             'twitter' => null,
             'user_id' => User::findByEmail('pepe@mail.es')->id,
         ]);
     }
+
+    /** @test  */
+public function the_twitter_must_be_an_url()
+{
+    $this->handleValidationExceptions();
+
+    $this->post('usuarios', $this->withData([
+        'twitter' => 'pepeperez'
+    ]))->assertSessionHasErrors(['twitter']);
+
+    $this->assertDatabaseEmpty('users');
+
+}
+
+    /** @test */
+    public function the_bio_is_required()
+    {
+        $this->handleValidationExceptions();
+
+        $this->post('usuarios', $this->withData([
+            'bio' => null
+        ]))->assertSessionHasErrors(['bio']);
+
+        $this->assertDatabaseEmpty('users');
+    }
+
 
     /** @test */
     public function the_first_name_is_required()
