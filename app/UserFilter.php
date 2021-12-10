@@ -17,6 +17,7 @@ class UserFilter extends QueryFilter
             'skills' => 'array|exists:skills,id',
             'from' => 'date_format:d/m/Y',
             'to' => 'date_format:d/m/Y',
+            'team' => 'in:with_team,without_team'
         ];
     }
 
@@ -61,5 +62,16 @@ class UserFilter extends QueryFilter
         $date = Carbon::createFromFormat('d/m/Y', $date);
 
         $query->whereDate('created_at', '<=', $date);
+    }
+
+    public function team($query, $team)
+    {
+
+        if ($team === 'with_team') {
+            $query->has('team');
+        } elseif ($team === 'without_team') {
+            $query->doesntHave('team');
+        }
+
     }
 }

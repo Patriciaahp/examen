@@ -48,7 +48,8 @@ class CreateUserRequest extends FormRequest
             ],
             'state' => [
                 Rule::in(['active', 'inactive'])
-            ]
+            ],
+
         ];
     }
 

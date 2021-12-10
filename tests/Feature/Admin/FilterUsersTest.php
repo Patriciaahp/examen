@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Skill;
+use App\Team;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -154,10 +155,45 @@ class FilterUsersTest extends TestCase
             ->notContains($newestUser)
             ->notContains($newUser);
     }
+    /** @test */
+    public function filter_users_by_team()
+    {
+        $hola = factory(Team::class)->create([ 'id' => '1', 'name'=> 'hola']);
+        $withTeamUser = factory(User::class)->create(['team_id' => $hola->id]);
+        $withoutTeamUser = factory(User::class)->create();
 
+        $response = $this->get('usuarios?team=with_team');
+
+        $response->assertViewCollection('users')
+            ->contains($withTeamUser)
+            ->notContains($withoutTeamUser);
+    }
+    /** @test */
+    public function filter_users_by_withou_team()
+    {
+        $hola = factory(Team::class)->create([ 'id' => '1', 'name'=> 'hola']);
+        $withTeamUser = factory(User::class)->create(['team_id' => $hola->id]);
+        $withoutTeamUser = factory(User::class)->create();
+
+        $response = $this->get('usuarios?team=without_team');
+
+        $response->assertViewCollection('users')
+            ->notContains($withTeamUser)
+            ->contains($withoutTeamUser);
+    }
+    /** @test */
+    public function filter_users_by_team_all()
+    {
+        $hola = factory(Team::class)->create([ 'id' => '1', 'name'=> 'hola']);
+        $withTeamUser = factory(User::class)->create(['team_id' => $hola->id]);
+        $withoutTeamUser = factory(User::class)->create(['team_id' => $hola->id]);
+
+        $response = $this->get('usuarios?team=all');
+
+        $response->assertViewCollection('users')
+            ->contains($withTeamUser)
+            ->contains($withoutTeamUser);
+    }
 
 
 }
-
-
-
